@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Shakti</string>
+    <string name="SOS">SOS</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="confirm_pass">Confirm Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="signup_msg">Don\'t have an account?</string>
+    <string name="helpline">Helplines</string>
+    <string name="add_friends">Add Friends</string>
+    <string name="send_sms">Send SMS</string>
+    <string name="track_me">Track Me</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="phone_no">Phone Number</string>
+    <string name="dob">Date of Birth</string>
+    <string name="address">Address</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+
+    <string name="bg">Background</string>
+    <string name="logo">Logo</string>
+</resources>
