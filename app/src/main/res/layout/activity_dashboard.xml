@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".Dashboard">
 
     <LinearLayout
@@ -78,7 +79,7 @@
             android:id="@+id/emergency_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="10dp"
             android:fontFamily="@font/pontano_sans"
             android:text="@string/emergency"
             android:textColor="@color/text_color"
@@ -105,10 +106,10 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:orientation="vertical"
-        android:padding="20dp"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sos_button_layout"
-        app:layout_constraintVertical_bias="0.178"
+        app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="0dp">
 
         <!-- Grid Layout for Cards -->
@@ -126,12 +127,12 @@
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
                 android:layout_margin="8dp"
-                android:cardCornerRadius="20dp"
-                android:cardElevation="5dp">
+                android:background="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp">
@@ -158,13 +159,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                android:cardCornerRadius="16dp"
-                android:cardElevation="4dp">
+                android:layout_margin="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp">
@@ -191,13 +191,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                android:cardCornerRadius="16dp"
-                android:cardElevation="4dp">
+                android:layout_margin="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp">
@@ -224,13 +223,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                android:cardCornerRadius="16dp"
-                android:cardElevation="4dp">
+                android:layout_margin="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:gravity="center"
                     android:orientation="vertical"
                     android:padding="16dp">

@@ -16,7 +16,7 @@
         android:letterSpacing="0.15"
         android:text="@string/sign_up"
         android:textColor="@android:color/white"
-        android:textSize="36dp"
+        android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/bg_white_img"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +37,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0"></ImageView>
+        app:layout_constraintVertical_bias="1.0" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,17 +65,17 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="20dp"
                 android:src="@drawable/username_icon" />
 
             <EditText
-                android:id="@+id/username_edittext"
+                android:id="@+id/email_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:fontFamily="@font/pontano_sans"
-                android:hint="Username"
+                android:hint="@string/email"
                 android:paddingVertical="12dp"
                 android:textColorHint="#E91E63"
                 android:textSize="24sp" /> <!-- Better touch area -->
@@ -142,7 +142,11 @@
                 android:textColorHint="#E91E63"
                 android:textSize="24sp" />
         </LinearLayout>
-
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
         <Button
             android:id="@+id/btn_signup"
             android:layout_width="200dp"
