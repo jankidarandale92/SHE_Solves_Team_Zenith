@@ -70,6 +70,7 @@
                 android:src="@drawable/username_icon" />
 
             <EditText
+                android:id="@+id/username_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -99,6 +100,7 @@
                 android:src="@drawable/password_icon" />
 
             <EditText
+                android:id="@+id/password_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
@@ -129,6 +131,7 @@
                 android:src="@drawable/password_icon" />
 
             <EditText
+                android:id="@+id/confirm_password_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
