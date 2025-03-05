@@ -14,7 +14,9 @@
         android:text="@string/sign_up"
         android:textColor="@android:color/white"
         android:textSize="36dp"
+        android:fontFamily="@font/title_font"
         android:textStyle="bold"
+        android:letterSpacing="0.15"
         app:layout_constraintBottom_toTopOf="@+id/bg_white_img"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -72,9 +74,10 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="Username"
+                android:fontFamily="@font/pontano_sans"
                 android:paddingVertical="12dp"
                 android:textColorHint="#E91E63"
-                android:textSize="20sp" /> <!-- Better touch area -->
+                android:textSize="24sp" /> <!-- Better touch area -->
         </LinearLayout>
 
         <!-- Password Field -->
@@ -100,10 +103,11 @@
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="Password"
+                android:fontFamily="@font/pontano_sans"
                 android:inputType="textPassword"
                 android:paddingVertical="12dp"
                 android:textColorHint="#E91E63"
-                android:textSize="20sp" />
+                android:textSize="24sp" />
         </LinearLayout>
 
         <!-- Confirm Password Field -->
@@ -131,22 +135,24 @@
                 android:hint="Confirm Password"
                 android:inputType="textPassword"
                 android:paddingVertical="12dp"
+                android:fontFamily="@font/pontano_sans"
                 android:textColorHint="#E91E63"
-                android:textSize="20sp" />
+                android:textSize="24sp" />
         </LinearLayout>
 
         <Button
             android:id="@+id/btn_signup"
             android:layout_width="200dp"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_margin="30dp"
             android:layout_gravity="center"
             android:backgroundTint="@color/primary"
             android:elevation="3dp"
+            android:fontFamily="@font/pontano_sans"
             android:stateListAnimator="@null"
             android:text="@string/sign_up"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:translationZ="4dp" />
 
     </LinearLayout>

@@ -45,6 +45,8 @@
         android:textColor="@android:color/white"
         android:textSize="36sp"
         android:textStyle="bold"
+        android:fontFamily="@font/title_font"
+        android:letterSpacing="0.12"
         app:layout_constraintBottom_toTopOf="@+id/logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,11 +70,13 @@
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:text="@string/sign_up"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textColor="@android:color/white"
             android:backgroundTint="@color/primary"
             android:elevation="3dp"
+            android:fontFamily="@font/pontano_sans"
             android:translationZ="2dp"
+            android:textStyle="bold"
             android:stateListAnimator="@null"
             android:layout_marginBottom="18dp"/>
 
@@ -83,9 +87,11 @@
             android:backgroundTint="@android:color/white"
             android:elevation="4dp"
             android:translationZ="2dp"
+            android:fontFamily="@font/pontano_sans"
+            android:textStyle="bold"
             android:stateListAnimator="@null"
             android:text="@string/login"
-            android:textSize="20sp"
+            android:textSize="24sp"
             android:textColor="@color/primary" />
     </LinearLayout>
 
