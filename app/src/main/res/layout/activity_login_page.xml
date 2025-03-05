@@ -67,11 +67,12 @@
                 android:src="@drawable/username_icon" />
 
             <EditText
+                android:id="@+id/email_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:fontFamily="@font/pontano_sans"
-                android:hint="Username"
+                android:hint="@string/email"
                 android:importantForAccessibility="yes"
                 android:inputType="text"
                 android:paddingVertical="12dp"
@@ -98,11 +99,12 @@
                 android:src="@drawable/password_icon" />
 
             <EditText
+                android:id="@+id/password_edittext"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:fontFamily="@font/pontano_sans"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:importantForAccessibility="yes"
                 android:inputType="textPassword"
                 android:paddingVertical="12dp"
@@ -151,6 +153,7 @@
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/signup_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
