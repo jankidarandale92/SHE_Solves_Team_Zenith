@@ -10,15 +10,17 @@
         android:id="@+id/sign_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/sign_up"
         android:textColor="@android:color/white"
         android:textSize="36dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/bg_white_img"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.739" />
+        app:layout_constraintVertical_bias="0.687" />
 
     <ImageView
         android:id="@+id/bg_white_img"
@@ -38,93 +40,114 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:foregroundGravity="center_vertical"
+        android:gravity="center_vertical"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/bg_white_img"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.682">
         <!-- Username Field -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="40dp"
             android:background="@drawable/input_bg"
-            android:padding="10dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="20dp"
-            android:minHeight="56dp"> <!-- Increased touch area -->
+            android:minHeight="56dp"
+            android:orientation="horizontal"
+            android:padding="10dp"> <!-- Increased touch area -->
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/username_icon"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/username_icon" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Username"
-                android:textColorHint="#E91E63"
-                android:textSize="20sp"
                 android:background="@null"
-                android:paddingVertical="12dp"/> <!-- Better touch area -->
+                android:hint="Username"
+                android:paddingVertical="12dp"
+                android:textColorHint="#E91E63"
+                android:textSize="20sp" /> <!-- Better touch area -->
         </LinearLayout>
 
         <!-- Password Field -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="30dp"
             android:background="@drawable/input_bg"
-            android:padding="10dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:minHeight="56dp">
+            android:minHeight="56dp"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/password_icon"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/password_icon" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:hint="Password"
                 android:inputType="textPassword"
+                android:paddingVertical="12dp"
                 android:textColorHint="#E91E63"
-                android:textSize="20sp"
-                android:background="@null"
-                android:paddingVertical="12dp"/>
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Confirm Password Field -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginTop="30dp"
             android:background="@drawable/input_bg"
-            android:padding="10dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="10dp"
-            android:minHeight="56dp">
+            android:minHeight="56dp"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/password_icon"
-                android:layout_marginRight="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/password_icon" />
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:hint="Confirm Password"
                 android:inputType="textPassword"
+                android:paddingVertical="12dp"
                 android:textColorHint="#E91E63"
-                android:textSize="20sp"
-                android:background="@null"
-                android:paddingVertical="12dp"/>
+                android:textSize="20sp" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_signup"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_margin="30dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/primary"
+            android:elevation="3dp"
+            android:stateListAnimator="@null"
+            android:text="@string/sign_up"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:translationZ="4dp" />
 
     </LinearLayout>
 
