@@ -23,6 +23,9 @@ import com.google.firebase.auth.FirebaseUser;
 public class Dashboard extends AppCompatActivity {
 
     CardView helplines;
+    CardView add_friends;
+    CardView send_sms;
+    CardView track_me;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     ImageView menuIcon;
@@ -35,7 +38,12 @@ public class Dashboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
         helplines = findViewById(R.id.helpline);
+        add_friends = findViewById(R.id.add_friends);
+        send_sms = findViewById(R.id.send_sms);
+        track_me = findViewById(R.id.track_me);
+
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
         menuIcon = findViewById(R.id.menu_icon);
@@ -46,6 +54,14 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Dashboard.this, Helplines.class);
+                startActivity(intent);
+            }
+        });
+
+        add_friends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Dashboard.this, AddFriends.class);
                 startActivity(intent);
             }
         });
@@ -75,7 +91,8 @@ public class Dashboard extends AppCompatActivity {
                     Intent intent = new Intent(Dashboard.this, Helplines.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_add_friends) {
-                    Toast.makeText(Dashboard.this, "Add Friends Selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Dashboard.this, AddFriends.class);
+                    startActivity(intent);
                 } else if (id == R.id.nav_send_sms) {
                     Toast.makeText(Dashboard.this, "Send SMS Selected", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_track_me) {

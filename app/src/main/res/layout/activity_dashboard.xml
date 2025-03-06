@@ -166,6 +166,7 @@
 
                 <!-- Card 2: Add Friends -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/add_friends"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -200,6 +201,7 @@
 
                 <!-- Card 3: Send SMS -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/send_sms"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"
@@ -234,6 +236,7 @@
 
                 <!-- Card 4: Track Me -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/track_me"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_columnWeight="1"

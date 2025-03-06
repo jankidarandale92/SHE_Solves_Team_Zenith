@@ -7,10 +7,9 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Shakti"
         tools:targetApi="31">
+        <activity
+            android:name=".AddFriends"
+            android:exported="false" />
         <activity
             android:name=".ProfilePage"
             android:exported="false" />
