@@ -128,7 +128,7 @@
             android:stateListAnimator="@null"
             android:text="@string/login"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:translationZ="4dp" />
     </LinearLayout>
 

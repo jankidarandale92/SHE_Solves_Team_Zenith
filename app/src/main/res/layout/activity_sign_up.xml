@@ -78,7 +78,8 @@
                 android:hint="@string/email"
                 android:paddingVertical="12dp"
                 android:textColorHint="#E91E63"
-                android:textSize="24sp" /> <!-- Better touch area -->
+                android:textColor="@color/black"
+                android:textSize="20sp" /> <!-- Better touch area -->
         </LinearLayout>
 
         <!-- Password Field -->
@@ -106,10 +107,11 @@
                 android:background="@null"
                 android:fontFamily="@font/pontano_sans"
                 android:hint="Password"
+                android:textColor="@color/black"
                 android:inputType="textPassword"
                 android:paddingVertical="12dp"
                 android:textColorHint="#E91E63"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Confirm Password Field -->
@@ -140,7 +142,8 @@
                 android:inputType="textPassword"
                 android:paddingVertical="12dp"
                 android:textColorHint="#E91E63"
-                android:textSize="24sp" />
+                android:textColor="@color/black"
+                android:textSize="20sp" />
         </LinearLayout>
         <ProgressBar
             android:id="@+id/progressbar"
@@ -159,7 +162,7 @@
             android:stateListAnimator="@null"
             android:text="@string/sign_up"
             android:textColor="@android:color/white"
-            android:textSize="24sp"
+            android:textSize="20sp"
             android:translationZ="4dp" />
 
     </LinearLayout>
