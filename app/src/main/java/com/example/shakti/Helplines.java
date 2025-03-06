@@ -23,11 +23,8 @@ public class Helplines extends AppCompatActivity {
 
         helplineList = new ArrayList<>();
         helplineList.add(new Item("Police", "100"));
-        helplineList.add(new Item("Police, Fire, Rescue", "112"));
+        helplineList.add(new Item("Hospital", "102"));
         helplineList.add(new Item("Women Helpline", "1091"));
-        helplineList.add(new Item("Child Helpline", "1098"));
-        helplineList.add(new Item("Nari Sammata Manch helpline", "020-24473116"));
-        helplineList.add(new Item("National Commission for Women Helpline", "7827170170"));
 
         adapter = new HelplineAdapter(this, helplineList);
         recyclerView.setAdapter(adapter);
