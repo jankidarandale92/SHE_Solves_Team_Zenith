@@ -3,6 +3,9 @@ package com.example.shakti;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ public class Helplines extends AppCompatActivity {
     private RecyclerView recyclerView;
     private HelplineAdapter adapter;
     private List<Item> helplineList;
+    ImageView backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +24,7 @@ public class Helplines extends AppCompatActivity {
         setContentView(R.layout.activity_helplines);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        backButton = findViewById(R.id.back_button);
 
         helplineList = new ArrayList<>();
         helplineList.add(new Item("Police", "100"));
@@ -32,5 +37,12 @@ public class Helplines extends AppCompatActivity {
 
         adapter = new HelplineAdapter(this, helplineList);
         recyclerView.setAdapter(adapter);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
     }
 }

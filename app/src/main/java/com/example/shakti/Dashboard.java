@@ -68,7 +68,6 @@ public class Dashboard extends AppCompatActivity {
                     Toast.makeText(Dashboard.this, "Logging Out...", Toast.LENGTH_SHORT).show();
                     finish(); // Close the app
                 }
-
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }
