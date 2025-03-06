@@ -66,7 +66,6 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
-        // Handle Navigation Item Clicks
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -82,36 +81,28 @@ public class Dashboard extends AppCompatActivity {
                 } else if (id == R.id.nav_track_me) {
                     Toast.makeText(Dashboard.this, "Track Me Selected", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_logout) {
-                    auth = FirebaseAuth.getInstance();
-                    logout = findViewById(R.id.nav_logout);
-                    user = auth.getCurrentUser();
-                    if (user == null){
+                    FirebaseAuth auth = FirebaseAuth.getInstance();
+                    FirebaseUser user = auth.getCurrentUser();
+
+                    if (user != null) {  // Check if the user is logged in before signing out
+                        auth.signOut();
                         Intent intent = new Intent(Dashboard.this, LoginPage.class);
                         startActivity(intent);
-                        finish();
+                        finish();  // Close Dashboard activity
                     }
-
-                    logout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            FirebaseAuth.getInstance().signOut();
-                            Intent intent = new Intent(Dashboard.this, LoginPage.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    });
                 }
-                drawerLayout.closeDrawer(GravityCompat.START);
+
+                drawerLayout.closeDrawer(GravityCompat.START);  // Close drawer after selection
                 return true;
             }
         });
     }
-    @Override
-    public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        @Override
+        public void onBackPressed () {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
         }
     }
-}
