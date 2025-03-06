@@ -55,7 +55,7 @@
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.521" />
+            app:layout_constraintVertical_bias="0.7" />
 
         <ImageButton
             android:id="@+id/btnEdit"
@@ -73,14 +73,17 @@
             android:orientation="vertical"
             android:padding="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:layout_editor_absoluteX="-28dp">
+            app:layout_constraintVertical_bias="0.767">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginVertical="5dp"
+                android:orientation="horizontal"
                 android:padding="10dp">
 
                 <TextView
@@ -98,6 +101,7 @@
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/pontano_sans"
                     android:hint="@string/username"
+                    android:textColor="@color/text_color"
                     android:textAlignment="viewEnd"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -129,6 +133,7 @@
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/pontano_sans"
                     android:hint="@string/email"
+                    android:textColor="@color/text_color"
                     android:textAlignment="viewEnd"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -161,6 +166,7 @@
                     android:fontFamily="@font/pontano_sans"
                     android:hint="@string/phone_no"
                     android:textAlignment="viewEnd"
+                    android:textColor="@color/text_color"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -192,6 +198,7 @@
                     android:fontFamily="@font/pontano_sans"
                     android:hint="@string/dob"
                     android:textAlignment="viewEnd"
+                    android:textColor="@color/text_color"
                     android:textSize="20sp" />
             </LinearLayout>
 
@@ -223,6 +230,7 @@
                     android:fontFamily="@font/pontano_sans"
                     android:hint="@string/address"
                     android:textAlignment="viewEnd"
+                    android:textColor="@color/text_color"
                     android:textSize="20sp" />
             </LinearLayout>
 

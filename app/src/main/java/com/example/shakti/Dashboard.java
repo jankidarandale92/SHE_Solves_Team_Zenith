@@ -29,6 +29,7 @@ public class Dashboard extends AppCompatActivity {
     FirebaseAuth auth;
     Button logout;
     FirebaseUser user;
+    ImageView profile_icon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class Dashboard extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
         menuIcon = findViewById(R.id.menu_icon);
+        profile_icon = findViewById(R.id.profile_icon);
 
 
         helplines.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +55,14 @@ public class Dashboard extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+        profile_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Dashboard.this, ProfilePage.class);
+                startActivity(intent);
             }
         });
 
