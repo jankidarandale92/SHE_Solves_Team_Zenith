@@ -56,7 +56,8 @@ public class Dashboard extends AppCompatActivity {
                 int id = item.getItemId();
 
                 if (id == R.id.nav_helpline) {
-                    Toast.makeText(Dashboard.this, "Helplines Selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Dashboard.this, Helplines.class);
+                    startActivity(intent);
                 } else if (id == R.id.nav_add_friends) {
                     Toast.makeText(Dashboard.this, "Add Friends Selected", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_send_sms) {
