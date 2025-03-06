@@ -15,7 +15,7 @@
     android:letterSpacing="0.15"
     android:text="@string/login"
     android:textColor="@android:color/white"
-    android:textSize="36sp"
+    android:textSize="30sp"
     android:textStyle="bold"
     app:layout_constraintBottom_toTopOf="@+id/bg_white_img"
     app:layout_constraintEnd_toEndOf="parent"
@@ -44,9 +44,10 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="@+id/bg_white_img"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.682">
+        app:layout_constraintVertical_bias="0.619">
 
         <!-- Username Field -->
         <LinearLayout
@@ -57,7 +58,7 @@
             android:gravity="center_vertical"
             android:minHeight="56dp"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <ImageView
                 android:layout_width="24dp"
@@ -76,8 +77,9 @@
                 android:importantForAccessibility="yes"
                 android:inputType="text"
                 android:paddingVertical="12dp"
+                android:textColor="@color/dark_text_color"
                 android:textColorHint="#E91E63"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <!-- Password Field -->
@@ -89,7 +91,7 @@
             android:gravity="center_vertical"
             android:minHeight="56dp"
             android:orientation="horizontal"
-            android:padding="10dp">
+            android:padding="5dp">
 
             <ImageView
                 android:layout_width="24dp"
@@ -108,18 +110,21 @@
                 android:importantForAccessibility="yes"
                 android:inputType="textPassword"
                 android:paddingVertical="12dp"
+                android:textColor="@color/dark_text_color"
                 android:textColorHint="#E91E63"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
         </LinearLayout>
+
         <ProgressBar
             android:id="@+id/progressbar"
-            android:visibility="gone"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/btn_login"
             android:layout_width="200dp"
-            android:layout_height="60dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_margin="40dp"
             android:backgroundTint="@color/primary"
@@ -142,7 +147,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-        app:layout_constraintVertical_bias="0.333">
+        app:layout_constraintVertical_bias="0.192">
 
         <TextView
             android:layout_width="wrap_content"
