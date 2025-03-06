@@ -18,6 +18,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:background="#D5006D"
+            android:contentDescription="@string/bg"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
             android:src="@drawable/baseline_arrow_back_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,26 +46,30 @@
         android:background="@color/white">
 
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imgProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
             android:scaleType="centerCrop"
             android:src="@drawable/profile_image"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.7" />
+            app:layout_constraintVertical_bias="0.7"
+            app:shapeAppearanceOverlay="@style/CircleImageStyle"/>
 
         <ImageButton
             android:id="@+id/btnEdit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+
             android:background="@drawable/add_button"
+            android:contentDescription="@string/bg"
             app:layout_constraintBottom_toBottomOf="@+id/imgProfile"
             app:layout_constraintEnd_toEndOf="@+id/imgProfile" />
 
@@ -101,9 +108,10 @@
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/pontano_sans"
                     android:hint="@string/username"
-                    android:textColor="@color/text_color"
                     android:textAlignment="viewEnd"
-                    android:textSize="20sp" />
+                    android:textColor="@color/text_color"
+                    android:textSize="20sp"
+                    tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
 
             <View
@@ -133,9 +141,10 @@
                     android:background="@android:color/transparent"
                     android:fontFamily="@font/pontano_sans"
                     android:hint="@string/email"
-                    android:textColor="@color/text_color"
                     android:textAlignment="viewEnd"
-                    android:textSize="20sp" />
+                    android:textColor="@color/text_color"
+                    android:textSize="20sp"
+                    tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
 
             <View
@@ -167,7 +176,8 @@
                     android:hint="@string/phone_no"
                     android:textAlignment="viewEnd"
                     android:textColor="@color/text_color"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
 
             <View
@@ -199,7 +209,10 @@
                     android:hint="@string/dob"
                     android:textAlignment="viewEnd"
                     android:textColor="@color/text_color"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    android:clickable="true"
+                    android:focusable="false"
+                    tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
 
             <View
@@ -231,7 +244,8 @@
                     android:hint="@string/address"
                     android:textAlignment="viewEnd"
                     android:textColor="@color/text_color"
-                    android:textSize="20sp" />
+                    android:textSize="20sp"
+                    tools:ignore="TouchTargetSizeCheck" />
             </LinearLayout>
 
             <View

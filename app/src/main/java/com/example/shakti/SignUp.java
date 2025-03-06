@@ -54,7 +54,7 @@ public class SignUp extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 if (validateInputs()) {
                     // If all conditions are met, navigate to HomeActivity
-                    Intent intent = new Intent(SignUp.this, Dashboard.class);
+                    Intent intent = new Intent(SignUp.this, LoginPage.class);
                     startActivity(intent);
                     finish(); // Close SignUp Activity
                 }
