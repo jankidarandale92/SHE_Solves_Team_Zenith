@@ -47,6 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/add"
         android:elevation="8dp"
         android:src="@drawable/add_button"
         app:layout_constraintBottom_toBottomOf="parent"
