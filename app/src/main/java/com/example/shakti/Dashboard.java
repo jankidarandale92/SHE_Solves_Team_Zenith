@@ -12,24 +12,16 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
-import android.location.Location;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.content.Intent;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.core.app.ActivityCompat;
-
 import android.content.pm.PackageManager;
 import android.Manifest;
-
-
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.view.LayoutInflater;
@@ -38,10 +30,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
-import android.Manifest;
-
-import com.example.shakti.R;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -83,17 +71,21 @@ public class Dashboard extends AppCompatActivity {
     private static final int RECORD_PERMISSION_REQUEST = 3;
 
     private MediaRecorder mediaRecorder;
+    private FirebaseFirestore db;
     private File audioFile;
+    TextView username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        auth = FirebaseAuth.getInstance();
 
         helplines = findViewById(R.id.helpline);
         add_friends = findViewById(R.id.add_friends);
         send_sms = findViewById(R.id.send_sms);
         track_me = findViewById(R.id.track_me);
+        username = findViewById(R.id.user_name);
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
@@ -101,6 +93,8 @@ public class Dashboard extends AppCompatActivity {
         profile_icon = findViewById(R.id.profile_icon);
         sos = findViewById(R.id.sos_button);
         databaseReference = FirebaseDatabase.getInstance().getReference("add_friends");
+
+        fetchUsername();
 
         // Fetch contacts from Firebase
         fetchContacts();
@@ -209,6 +203,29 @@ public class Dashboard extends AppCompatActivity {
                 Toast.makeText(Dashboard.this, "Failed to fetch contacts!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void fetchUsername() {
+        FirebaseUser user = auth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+        if (user != null) {
+            String userId = user.getUid();
+            DocumentReference userRef = db.collection("users").document(userId);
+
+            userRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    String name = documentSnapshot.getString("username");
+                    if (name != null && !name.isEmpty()) {
+                        username.setText("Hi, " + name);
+                    }
+                } else {
+                    username.setText("Hi, User");
+                }
+            }).addOnFailureListener(e -> {
+                Log.e("Firestore", "Error fetching username", e);
+                username.setText("Hi, User");
+            });
+        }
     }
 
 
@@ -347,17 +364,12 @@ public class Dashboard extends AppCompatActivity {
     }
 
 
-
 //    ------------------- Handling the Audio Recording -------------------
 
     private void startAudioRecording() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
-                    RECORD_PERMISSION_REQUEST);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, RECORD_PERMISSION_REQUEST);
             return;
         }
 
