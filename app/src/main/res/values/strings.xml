@@ -25,4 +25,5 @@
 
     <string name="bg">Background</string>
     <string name="logo">Logo</string>
+    <string name="title_activity_track_me">TrackMe</string>
 </resources>

@@ -15,17 +15,29 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class AddFriends extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private HelplineAdapter adapter;
     private List<Item> helplineList;
-    ImageView backButton;
+    private List<Map<String, Object>> friendsList;  // Cached Firestore list
+    private ImageView backButton;
     private ImageButton addFriend;
-    TextView noEntriesText;
+    private TextView noEntriesText;
+    private FirebaseFirestore db;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,32 +51,87 @@ public class AddFriends extends AppCompatActivity {
         noEntriesText = findViewById(R.id.no_entries_text);
 
         helplineList = new ArrayList<>();
-//        helplineList.add(new Item("Police", "100"));
-//        helplineList.add(new Item("Hospital", "102"));
-//        helplineList.add(new Item("Police, Fire, Rescue", "112"));
-//        helplineList.add(new Item("Women Helpline", "1091"));
-//        helplineList.add(new Item("Child Helpline", "1098"));
-//        helplineList.add(new Item("Nari Sammata Manch helpline", "020-24473116"));
-//        helplineList.add(new Item("National Commission for Women Helpline", "7827170170"));
-
+        friendsList = new ArrayList<>();
         adapter = new HelplineAdapter(this, helplineList);
         recyclerView.setAdapter(adapter);
 
-        updateNoEntriesText();
-        backButton.setOnClickListener(new View.OnClickListener() {
+        db = FirebaseFirestore.getInstance();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            userId = currentUser.getUid();
+            loadFriendsFromFirestore();
+        } else {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
+        }
+
+        enableSwipeToDelete();
+        backButton.setOnClickListener(view -> onBackPressed());
+        addFriend.setOnClickListener(view -> showAddFriendDialog());
+    }
+
+    private void enableSwipeToDelete() {
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
-            public void onClick(View view) {
-                onBackPressed();
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                deleteFriend(viewHolder.getAdapterPosition());
+            }
+        };
+
+        new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
+    }
+
+    private void deleteFriend(int position) {
+        if (position < 0 || position >= friendsList.size()) return;
+
+        friendsList.remove(position);
+        db.collection("users").document(userId).update("friends", friendsList).addOnSuccessListener(aVoid -> {
+            if (!isDestroyed()) {
+                helplineList.remove(position);
+                adapter.notifyItemRemoved(position);
+                updateNoEntriesText();
+                Toast.makeText(this, "Friend deleted", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> {
+            if (!isDestroyed()) {
+                Toast.makeText(this, "Error deleting friend: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
 
-        addFriend.setOnClickListener(view -> showAddFriendDialog());
+    private void loadFriendsFromFirestore() {
+        db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+            if (!isDestroyed()) {
+                helplineList.clear();
+                friendsList.clear();
+
+                if (documentSnapshot.exists()) {
+                    List<Map<String, Object>> retrievedFriends = (List<Map<String, Object>>) documentSnapshot.get("friends");
+                    if (retrievedFriends != null) {
+                        friendsList.addAll(retrievedFriends);
+                        for (Map<String, Object> friend : friendsList) {
+                            helplineList.add(new Item((String) friend.get("name"), (String) friend.get("phone")));
+                        }
+                    }
+                }
+
+                adapter.notifyDataSetChanged();
+                updateNoEntriesText();
+            }
+        }).addOnFailureListener(e -> {
+            if (!isDestroyed()) {
+                Toast.makeText(this, "Error loading friends: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void showAddFriendDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.add_friends_form, null);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.add_friends_form, null);
         builder.setView(dialogView);
 
         EditText editTextName = dialogView.findViewById(R.id.editTextName);
@@ -83,26 +150,45 @@ public class AddFriends extends AppCompatActivity {
 
             if (name.isEmpty() || phone.isEmpty()) {
                 Toast.makeText(this, "Please enter both name and phone number", Toast.LENGTH_SHORT).show();
-            } else {
-                helplineList.add(new Item(name, phone));
-                adapter.notifyItemInserted(helplineList.size() - 1);
-                recyclerView.smoothScrollToPosition(helplineList.size() - 1);
-
-                // Update visibility
-                updateNoEntriesText();
-
-                Toast.makeText(this, "Friend Added: " + name + " (" + phone + ")", Toast.LENGTH_SHORT).show();
-                dialog.dismiss();
+                return;
             }
+
+            if (!phone.matches("\\d{10}")) {
+                Toast.makeText(this, "Enter a valid 10-digit phone number", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Prevent duplicate entries
+            for (Map<String, Object> existingFriend : friendsList) {
+                if (existingFriend.get("phone").equals(phone)) {
+                    Toast.makeText(this, "This phone number is already in the list", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            Map<String, Object> newFriend = new HashMap<>();
+            newFriend.put("name", name);
+            newFriend.put("phone", phone);
+
+            friendsList.add(newFriend);
+            db.collection("users").document(userId).update("friends", friendsList).addOnSuccessListener(aVoid -> {
+                if (!isDestroyed()) {
+                    helplineList.add(new Item(name, phone));
+                    adapter.notifyItemInserted(helplineList.size() - 1);
+                    recyclerView.smoothScrollToPosition(helplineList.size() - 1);
+                    updateNoEntriesText();
+                    Toast.makeText(this, "Friend Added", Toast.LENGTH_SHORT).show();
+                }
+                dialog.dismiss();
+            }).addOnFailureListener(e -> {
+                if (!isDestroyed()) {
+                    Toast.makeText(this, "Error adding friend: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
         });
     }
 
-    // Function to update visibility
     private void updateNoEntriesText() {
-        if (helplineList.isEmpty()) {
-            noEntriesText.setVisibility(View.VISIBLE);
-        } else {
-            noEntriesText.setVisibility(View.GONE);
-        }
+        noEntriesText.setVisibility(helplineList.isEmpty() ? View.VISIBLE : View.GONE);
     }
 }

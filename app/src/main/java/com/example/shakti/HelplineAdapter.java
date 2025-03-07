@@ -1,15 +1,21 @@
 package com.example.shakti;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.Manifest;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -37,9 +43,16 @@ public class HelplineAdapter extends RecyclerView.Adapter<HelplineAdapter.ViewHo
         holder.phoneTextView.setText(item.getPhone());
 
         holder.callImageView.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_DIAL);
-            intent.setData(Uri.parse("tel:" + item.getPhone()));
-            context.startActivity(intent);
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, make the call
+                Intent intent = new Intent(Intent.ACTION_CALL);
+                intent.setData(Uri.parse("tel:" + item.getPhone()));
+                context.startActivity(intent);
+            } else {
+                // Request permission
+                ActivityCompat.requestPermissions((Activity) context, new String[]{Manifest.permission.CALL_PHONE}, 1);
+                Toast.makeText(context, "Please grant call permission", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
