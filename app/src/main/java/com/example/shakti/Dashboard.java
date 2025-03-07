@@ -9,6 +9,25 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.media.MediaRecorder;
+import android.net.Uri;
+import android.content.Intent;
+import android.os.Environment;
+import android.os.Handler;
+import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+
+import android.content.pm.PackageManager;
+import android.Manifest;
+
+
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -27,9 +46,17 @@ import com.example.shakti.R;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +73,17 @@ public class Dashboard extends AppCompatActivity {
     Button logout;
     FirebaseUser user;
     ImageView profile_icon;
+    ImageView sos;
+    private DatabaseReference databaseReference;
+
+    private List<String> contactList = new ArrayList<>();
+
+    private static final int CALL_PERMISSION_REQUEST = 1;
+    private static final int SMS_PERMISSION_REQUEST = 2;
+    private static final int RECORD_PERMISSION_REQUEST = 3;
+
+    private MediaRecorder mediaRecorder;
+    private File audioFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +99,14 @@ public class Dashboard extends AppCompatActivity {
         navigationView = findViewById(R.id.navigation_view);
         menuIcon = findViewById(R.id.menu_icon);
         profile_icon = findViewById(R.id.profile_icon);
+        sos = findViewById(R.id.sos_button);
+        databaseReference = FirebaseDatabase.getInstance().getReference("add_friends");
+
+        // Fetch contacts from Firebase
+        fetchContacts();
+
+        // Click Listener for SOS Image
+        sos.setOnClickListener(v -> handleSOS());
 
 
         helplines.setOnClickListener(new View.OnClickListener() {
@@ -89,8 +135,7 @@ public class Dashboard extends AppCompatActivity {
         track_me.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Dashboard.this, TrackMe.class);
-                startActivity(intent);
+                sendLocationViaSMS();
             }
         });
 
@@ -124,7 +169,9 @@ public class Dashboard extends AppCompatActivity {
                 } else if (id == R.id.nav_send_sms) {
                     showSendSmsDialog();
                 } else if (id == R.id.nav_track_me) {
-                    Intent intent = new Intent(Dashboard.this, TrackMe.class);
+                    sendLocationViaSMS();
+                } else if (id == R.id.nav_nearby_safe_places) {
+                    Intent intent = new Intent(Dashboard.this, NearbyPlaces.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_logout) {
                     FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -144,6 +191,27 @@ public class Dashboard extends AppCompatActivity {
         });
     }
 
+    private void fetchContacts() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                contactList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String phoneNumber = dataSnapshot.getValue(String.class);
+                    if (phoneNumber != null) {
+                        contactList.add(phoneNumber);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(Dashboard.this, "Failed to fetch contacts!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -153,6 +221,7 @@ public class Dashboard extends AppCompatActivity {
         }
     }
 
+    // ------------------- Handling the Send SMS Functionality -------------------
     private void showSendSmsDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(Dashboard.this);
         LayoutInflater inflater = getLayoutInflater();
@@ -234,4 +303,124 @@ public class Dashboard extends AppCompatActivity {
             ActivityCompat.requestPermissions(Dashboard.this, new String[]{Manifest.permission.SEND_SMS}, 1);
         }
     }
+
+    // ------------------- Handling the Track Me Functionality -------------------
+    private void sendLocationViaSMS() {
+        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        }
+
+        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+                String locationUrl = "Track Me... My location: https://www.google.com/maps?q=" + latitude + "," + longitude;
+
+                // Send location via SMS
+                sendSMSToAllContacts(locationUrl);
+            } else {
+                Toast.makeText(this, "Failed to get location", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    // ------------------- Handling the SOS Activation -------------------
+    private void handleSOS() {
+        startAudioRecording();
+        sendSMSToAllContacts("Emergency!!! HELP ME....");
+        sendLocationViaSMS();
+        callEmergencyNumber("7447776999");
+    }
+
+    private void callEmergencyNumber(String phoneNumber) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, CALL_PERMISSION_REQUEST);
+            return;
+        }
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:" + phoneNumber));
+        startActivity(callIntent);
+    }
+
+
+
+//    ------------------- Handling the Audio Recording -------------------
+
+    private void startAudioRecording() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
+                    RECORD_PERMISSION_REQUEST);
+            return;
+        }
+
+        // Start recording if permission is already granted
+        startRecording();
+    }
+
+    // Handle user's response to permission request
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == RECORD_PERMISSION_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "✅ Permission granted! Starting recording...", Toast.LENGTH_SHORT).show();
+                startRecording();
+            } else {
+                Toast.makeText(this, "❌ Permission denied! Cannot record audio.", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    // Function to start recording audio and save in Internal Storage
+    private void startRecording() {
+        try {
+            // Path to save the file in "Documents" folder of Internal Storage
+            File documentsFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+            if (!documentsFolder.exists()) {
+                documentsFolder.mkdirs();  // Create Documents folder if it doesn't exist
+            }
+
+            // Create file name
+            String fileName = "sos_audio_" + System.currentTimeMillis() + ".3gp";
+            audioFile = new File(documentsFolder, fileName);
+
+            mediaRecorder = new MediaRecorder();
+            mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mediaRecorder.setOutputFile(audioFile.getAbsolutePath());
+            mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+            mediaRecorder.prepare();
+            mediaRecorder.start();
+
+            Toast.makeText(this, "🎤 Recording started... Saving in Documents!", Toast.LENGTH_SHORT).show();
+
+            // Automatically stop recording after 10 seconds
+            new Handler().postDelayed(this::stopAudioRecording, 10000);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "❌ Recording failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    // Function to stop recording
+    private void stopAudioRecording() {
+        if (mediaRecorder != null) {
+            mediaRecorder.stop();
+            mediaRecorder.release();
+            mediaRecorder = null;
+            Toast.makeText(this, "✅ Recording saved in Documents!", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
+
