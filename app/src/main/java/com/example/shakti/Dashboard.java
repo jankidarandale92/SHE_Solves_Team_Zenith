@@ -1,24 +1,37 @@
 package com.example.shakti;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.telephony.SmsManager;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+import android.Manifest;
 
 import com.example.shakti.R;
 
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
+import java.util.Map;
 
 public class Dashboard extends AppCompatActivity {
 
@@ -66,6 +79,21 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        send_sms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSendSmsDialog();
+            }
+        });
+
+        track_me.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Dashboard.this, TrackMe.class);
+                startActivity(intent);
+            }
+        });
+
         // Open Drawer when Icon is Clicked
         menuIcon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +124,8 @@ public class Dashboard extends AppCompatActivity {
                 } else if (id == R.id.nav_send_sms) {
                     Toast.makeText(Dashboard.this, "Send SMS Selected", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_track_me) {
-                    Toast.makeText(Dashboard.this, "Track Me Selected", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Dashboard.this, TrackMe.class);
+                    startActivity(intent);
                 } else if (id == R.id.nav_logout) {
                     FirebaseAuth auth = FirebaseAuth.getInstance();
                     FirebaseUser user = auth.getCurrentUser();
@@ -114,12 +143,87 @@ public class Dashboard extends AppCompatActivity {
             }
         });
     }
-        @Override
-        public void onBackPressed () {
-            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                drawerLayout.closeDrawer(GravityCompat.START);
-            } else {
-                super.onBackPressed();
-            }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
         }
     }
+
+    private void showSendSmsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Dashboard.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.activity_send_sms, null);
+        builder.setView(dialogView);
+
+        // Find views in dialog
+        EditText message = dialogView.findViewById(R.id.et_message);
+        Button sendButton = dialogView.findViewById(R.id.btn_send);
+        Button cancelButton = dialogView.findViewById(R.id.btn_cancel);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+        sendButton.setOnClickListener(v -> {
+            String msg = message.getText().toString().trim();
+
+            if (msg.isEmpty()) {
+                Toast.makeText(Dashboard.this, "Please enter a message", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            sendSMSToAllContacts(msg);  // Call function to send SMS to all numbers
+            dialog.dismiss();  // Close the dialog
+        });
+
+        cancelButton.setOnClickListener(v -> dialog.dismiss()); // Close dialog when cancel is clicked
+    }
+
+    private void sendSMSToAllContacts(String message) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user == null) {
+            Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference userRef = db.collection("users").document(user.getUid());
+
+        userRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<Map<String, Object>> friendsList = (List<Map<String, Object>>) documentSnapshot.get("friends");
+
+                if (friendsList != null) {
+                    for (Map<String, Object> friend : friendsList) {
+                        String phoneNumber = (String) friend.get("phone");
+                        if (phoneNumber != null) {
+                            sendSMS(phoneNumber, message);  // Send SMS to each contact
+                        }
+                    }
+                    Toast.makeText(this, "SMS sent to all contacts", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "No contacts found", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Failed to fetch contacts: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
+    }
+
+
+    private void sendSMS(String phoneNumber, String message) {
+        if (ContextCompat.checkSelfPermission(Dashboard.this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNumber, null, message, null, null);
+            Toast.makeText(Dashboard.this, "SMS Sent", Toast.LENGTH_SHORT).show();
+        } else {
+            ActivityCompat.requestPermissions(Dashboard.this, new String[]{Manifest.permission.SEND_SMS}, 1);
+        }
+    }
+}

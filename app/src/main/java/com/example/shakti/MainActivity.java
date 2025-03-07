@@ -1,11 +1,15 @@
 package com.example.shakti;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.Manifest;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,20 +20,14 @@ public class MainActivity extends AppCompatActivity {
 
         Button signup = findViewById(R.id.btn_signup);
         Button login = findViewById(R.id.btn_login);
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SignUp.class);
-                startActivity(intent);
-            }
+        signup.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, SignUp.class);
+            startActivity(intent);
         });
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LoginPage.class);
-                startActivity(intent);
-            }
+        login.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, LoginPage.class);
+            startActivity(intent);
         });
     }
 }
