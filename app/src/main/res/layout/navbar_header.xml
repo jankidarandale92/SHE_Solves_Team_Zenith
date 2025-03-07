@@ -7,18 +7,20 @@
     android:padding="20dp">
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/profile_image_icon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
-        android:padding="10dp"/>
+        android:foregroundGravity="center_vertical"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:src="@drawable/shakti" />
 
     <TextView
         android:id="@+id/nav_user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hi, Yashshri"
+        android:layout_gravity="center"
+        android:text="@string/app_name"
         android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:layout_gravity="center"/>
+        android:textSize="18sp" />
 </LinearLayout>

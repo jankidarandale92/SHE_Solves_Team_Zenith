@@ -15,9 +15,11 @@ import com.google.android.gms.location.LocationServices;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Window;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.pm.PackageManager;
@@ -79,6 +81,17 @@ public class Dashboard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getWindow().setDecorFitsSystemWindows(false);
+        } else {
+            Window window = getWindow();
+            window.getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            );
+            window.setStatusBarColor(android.graphics.Color.TRANSPARENT);
+        }
+
         auth = FirebaseAuth.getInstance();
 
         helplines = findViewById(R.id.helpline);
@@ -208,25 +221,38 @@ public class Dashboard extends AppCompatActivity {
     private void fetchUsername() {
         FirebaseUser user = auth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
+
         if (user != null) {
             String userId = user.getUid();
             DocumentReference userRef = db.collection("users").document(userId);
 
-            userRef.get().addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
+            // Add a real-time listener
+            userRef.addSnapshotListener((documentSnapshot, error) -> {
+                if (error != null) {
+                    Log.e("Firestore", "Error listening to username updates", error);
+                    return;
+                }
+
+                if (documentSnapshot != null && documentSnapshot.exists()) {
                     String name = documentSnapshot.getString("username");
+                    Log.d("DEBUG", "Real-time username update: " + name);
+
                     if (name != null && !name.isEmpty()) {
                         username.setText("Hi, " + name);
+                    } else {
+                        username.setText("Hi, User");
                     }
                 } else {
+                    Log.e("DEBUG", "No user document found");
                     username.setText("Hi, User");
                 }
-            }).addOnFailureListener(e -> {
-                Log.e("Firestore", "Error fetching username", e);
-                username.setText("Hi, User");
             });
+        } else {
+            Log.e("DEBUG", "User is null");
+            username.setText("Hi, User");
         }
     }
+
 
 
     @Override
