@@ -22,6 +22,11 @@
         android:title="Track Me" />
 
     <item
+        android:id="@+id/nav_nearby_safe_places"
+        android:icon="@drawable/safe_places"
+        android:title="Nearby Safe Places" />
+
+    <item
         android:id="@+id/nav_logout"
         android:icon="@drawable/logout_icon"
         android:title="Logout" />
