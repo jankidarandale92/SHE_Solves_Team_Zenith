@@ -122,7 +122,7 @@ public class Dashboard extends AppCompatActivity {
                     Intent intent = new Intent(Dashboard.this, AddFriends.class);
                     startActivity(intent);
                 } else if (id == R.id.nav_send_sms) {
-                    Toast.makeText(Dashboard.this, "Send SMS Selected", Toast.LENGTH_SHORT).show();
+                    showSendSmsDialog();
                 } else if (id == R.id.nav_track_me) {
                     Intent intent = new Intent(Dashboard.this, TrackMe.class);
                     startActivity(intent);
@@ -197,16 +197,24 @@ public class Dashboard extends AppCompatActivity {
             if (documentSnapshot.exists()) {
                 List<Map<String, Object>> friendsList = (List<Map<String, Object>>) documentSnapshot.get("friends");
 
-                if (friendsList != null) {
+                if (friendsList != null && !friendsList.isEmpty()) {
+                    boolean atLeastOneSMSsent = false;
+
                     for (Map<String, Object> friend : friendsList) {
                         String phoneNumber = (String) friend.get("phone");
-                        if (phoneNumber != null) {
-                            sendSMS(phoneNumber, message);  // Send SMS to each contact
+                        if (phoneNumber != null && !phoneNumber.isEmpty()) {
+                            sendSMS(phoneNumber, message);
+                            atLeastOneSMSsent = true;
                         }
                     }
-                    Toast.makeText(this, "SMS sent to all contacts", Toast.LENGTH_SHORT).show();
+
+                    if (atLeastOneSMSsent) {
+                        Toast.makeText(this, "SMS sent to all contacts", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "No valid phone numbers found", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
-                    Toast.makeText(this, "No contacts found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "No contacts exist", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(this, "User data not found", Toast.LENGTH_SHORT).show();
