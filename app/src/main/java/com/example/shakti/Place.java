@@ -1,6 +1,7 @@
 package com.example.shakti;
 
 public class Place {
+    //  Declaration of all the Required Variables
     private String name;
     private double latitude;
     private double longitude;

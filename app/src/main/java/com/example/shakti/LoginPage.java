@@ -25,6 +25,7 @@ public class LoginPage extends AppCompatActivity {
     FirebaseAuth mAuth;
     TextView textView;
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -58,6 +59,7 @@ public class LoginPage extends AppCompatActivity {
             }
         });
 
+        //  Loader
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -67,6 +69,7 @@ public class LoginPage extends AppCompatActivity {
         });
     }
 
+    //  Function to Validate Inputs
     private boolean validateInputs() {
         progressBar.setVisibility(View.VISIBLE);
         String email = emailEditText.getText().toString().trim();
@@ -104,6 +107,7 @@ public class LoginPage extends AppCompatActivity {
         return true;
     }
 
+    //  Function to show Toast
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }

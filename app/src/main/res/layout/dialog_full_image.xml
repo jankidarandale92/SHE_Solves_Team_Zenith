@@ -4,6 +4,7 @@
     android:layout_height="300dp"
     android:background="@android:color/transparent">
 
+    <!--    Profile Image Dialog    -->
     <ImageView
         android:id="@+id/fullImageView"
         android:layout_width="300dp"

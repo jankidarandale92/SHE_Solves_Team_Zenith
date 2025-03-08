@@ -6,6 +6,7 @@
     android:background="@color/primary"
     android:padding="20dp">
 
+    <!--    App Logo    -->
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
@@ -15,6 +16,7 @@
         android:padding="5dp"
         android:src="@drawable/shakti" />
 
+    <!--    App Name    -->
     <TextView
         android:id="@+id/nav_user_name"
         android:layout_width="wrap_content"

@@ -7,6 +7,8 @@
     android:background="@color/primary"
     tools:context=".SignUp">
 
+
+<!--    Sign Up Page Title    -->
     <TextView
         android:id="@+id/sign_up"
         android:layout_width="wrap_content"
@@ -51,6 +53,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.682">
+
         <!-- Username Field -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,7 +63,7 @@
             android:gravity="center_vertical"
             android:minHeight="56dp"
             android:orientation="horizontal"
-            android:padding="5dp"> <!-- Increased touch area -->
+            android:padding="5dp">
 
             <ImageView
                 android:layout_width="24dp"
@@ -145,11 +148,15 @@
                 android:textColor="@color/dark_text_color"
                 android:textSize="20sp" />
         </LinearLayout>
+
+        <!--    Loader    -->
         <ProgressBar
             android:id="@+id/progressbar"
             android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+
+        <!--    Signup Button    -->
         <Button
             android:id="@+id/btn_signup"
             android:layout_width="200dp"

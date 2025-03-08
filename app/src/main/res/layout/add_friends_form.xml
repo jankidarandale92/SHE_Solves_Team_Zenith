@@ -7,6 +7,7 @@
     android:orientation="vertical"
     android:padding="20dp">
 
+    <!--    Name Field    -->
     <EditText
         android:id="@+id/editTextName"
         android:layout_width="match_parent"
@@ -18,6 +19,7 @@
         android:textColor="@color/dark_text_color"
         android:textStyle="bold" />
 
+    <!--    Phone Number Field    -->
     <EditText
         android:id="@+id/editTextPhone"
         android:layout_width="match_parent"
@@ -37,6 +39,7 @@
         android:gravity="end"
         android:orientation="horizontal">
 
+        <!--    Cancel Button    -->
         <Button
             android:id="@+id/btn_cancel"
             android:layout_width="wrap_content"
@@ -52,6 +55,7 @@
             android:textStyle="bold"
             android:translationZ="2dp" />
 
+        <!--    Save Button    -->
         <Button
             android:id="@+id/btn_save"
             android:layout_width="wrap_content"

@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -42,6 +43,7 @@ import java.util.Map;
 
 public class ProfilePage extends AppCompatActivity {
 
+    //  Declaration of all the Required Variables
     ImageButton back, btnEdit;
     Button save;
     private static final int REQUEST_CAMERA = 1;
@@ -57,6 +59,7 @@ public class ProfilePage extends AppCompatActivity {
     String userID;
     FirebaseStorage storage;
     StorageReference storageReference;
+    ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +75,7 @@ public class ProfilePage extends AppCompatActivity {
         phone = findViewById(R.id.etPhone);
         dob = findViewById(R.id.etDob);
         address = findViewById(R.id.etAddress);
+        progressBar = findViewById(R.id.progressbar);
 
         calendar = Calendar.getInstance();
 
@@ -96,6 +100,7 @@ public class ProfilePage extends AppCompatActivity {
 
     // Load user profile data from Firestore
     private void loadUserProfile() {
+        progressBar.setVisibility(View.VISIBLE);
         DocumentReference docRef = fstore.collection("users").document(userID);
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -112,11 +117,13 @@ public class ProfilePage extends AppCompatActivity {
                     }
                 }
             }
-        });
+            progressBar.setVisibility(View.GONE);
+        }).addOnFailureListener(e -> progressBar.setVisibility(View.GONE));
     }
 
     // Save user profile data to Firestore
     private void saveUserProfile() {
+        progressBar.setVisibility(View.VISIBLE);
         String user_name = username.getText().toString().trim();
         String user_email = email.getText().toString().trim();
         String user_phone = phone.getText().toString().trim();
@@ -131,11 +138,13 @@ public class ProfilePage extends AppCompatActivity {
         user.put("address", user_address);
 
         DocumentReference documentReference = fstore.collection("users").document(userID);
-        documentReference.set(user).addOnSuccessListener(aVoid ->
-                Toast.makeText(ProfilePage.this, "Profile Updated Successfully!", Toast.LENGTH_SHORT).show()
-        ).addOnFailureListener(e ->
-                Toast.makeText(ProfilePage.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-        );
+        documentReference.set(user).addOnSuccessListener(aVoid -> {
+            Toast.makeText(ProfilePage.this, "Profile Updated Successfully!", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE); // Hide ProgressBar after successful update
+        }).addOnFailureListener(e -> {
+            Toast.makeText(ProfilePage.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE); // Hide ProgressBar on failure
+        });
 
         if (imageUri != null) {
             uploadImageToStorage();
@@ -148,13 +157,14 @@ public class ProfilePage extends AppCompatActivity {
 
         fileRef.putFile(imageUri).addOnSuccessListener(taskSnapshot ->
                 fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    String downloadUrl = uri.toString();
                     fstore.collection("users").document(userID)
-                            .update("profileImageUrl", downloadUrl);
+                            .update("profileImageUrl", uri.toString());
+                    progressBar.setVisibility(View.GONE); // Hide progress when upload is complete
                 })
-        ).addOnFailureListener(e ->
-                Toast.makeText(ProfilePage.this, "Image Upload Failed!", Toast.LENGTH_SHORT).show()
-        );
+        ).addOnFailureListener(e -> {
+            Toast.makeText(ProfilePage.this, "Image Upload Failed!", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.GONE);
+        });
     }
 
     private void showFullImageDialog() {

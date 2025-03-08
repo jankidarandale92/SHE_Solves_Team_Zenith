@@ -1,6 +1,7 @@
 package com.example.shakti;
 
 public class Item {
+    //  Declaration of all the Required Variables
     String name;
     String phone;
 

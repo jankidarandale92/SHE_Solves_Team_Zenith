@@ -1,31 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!--    Helplines Menu    -->
     <item
         android:id="@+id/nav_helpline"
         android:icon="@drawable/helpline_icon"
         android:title="Helplines" />
 
+    <!--    Add Friends Menu    -->
     <item
         android:id="@+id/nav_add_friends"
         android:icon="@drawable/add_friends_icon"
         android:title="Add Friends" />
 
+    <!--    Send SMS Menu    -->
     <item
         android:id="@+id/nav_send_sms"
         android:icon="@drawable/send_sms_icon"
         android:title="Send SMS" />
 
+    <!--    Track Me Menu    -->
     <item
         android:id="@+id/nav_track_me"
         android:icon="@drawable/track_me_icon"
         android:title="Track Me" />
 
+    <!--    Nearby Safe Places Menu    -->
     <item
         android:id="@+id/nav_nearby_safe_places"
         android:icon="@drawable/safe_places"
         android:title="Nearby Safe Places" />
 
+    <!--    Logout Menu    -->
     <item
         android:id="@+id/nav_logout"
         android:icon="@drawable/logout_icon"

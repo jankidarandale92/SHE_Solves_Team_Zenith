@@ -14,6 +14,7 @@ import java.util.List;
 
 public class Helplines extends AppCompatActivity {
 
+    //  Declaration of all the Required Variables
     private RecyclerView recyclerView;
     private HelplineAdapter adapter;
     private List<Item> helplineList;

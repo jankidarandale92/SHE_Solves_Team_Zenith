@@ -52,6 +52,7 @@ import java.util.Map;
 
 public class Dashboard extends AppCompatActivity {
 
+    //  Declaration of all the Required Variables
     CardView helplines;
     CardView add_friends;
     CardView send_sms;
@@ -92,6 +93,7 @@ public class Dashboard extends AppCompatActivity {
             window.setStatusBarColor(android.graphics.Color.TRANSPARENT);
         }
 
+        //  Initialization of all the Required Variables
         auth = FirebaseAuth.getInstance();
 
         helplines = findViewById(R.id.helpline);
@@ -107,6 +109,7 @@ public class Dashboard extends AppCompatActivity {
         sos = findViewById(R.id.sos_button);
         databaseReference = FirebaseDatabase.getInstance().getReference("add_friends");
 
+        //  Fetch Username from Firebase
         fetchUsername();
 
         // Fetch contacts from Firebase
@@ -115,7 +118,7 @@ public class Dashboard extends AppCompatActivity {
         // Click Listener for SOS Image
         sos.setOnClickListener(v -> handleSOS());
 
-
+        //  Helplines
         helplines.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,6 +127,7 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        //  Add Friends
         add_friends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -132,6 +136,7 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        //  Send SMS
         send_sms.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,6 +167,7 @@ public class Dashboard extends AppCompatActivity {
             }
         });
 
+        //  Handling Menus
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -198,6 +204,7 @@ public class Dashboard extends AppCompatActivity {
         });
     }
 
+    //  Function to fetch Contacts
     private void fetchContacts() {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -218,6 +225,7 @@ public class Dashboard extends AppCompatActivity {
         });
     }
 
+    //  Function to fetch Username
     private void fetchUsername() {
         FirebaseUser user = auth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -253,8 +261,7 @@ public class Dashboard extends AppCompatActivity {
         }
     }
 
-
-
+    //  Function to navigate back
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {

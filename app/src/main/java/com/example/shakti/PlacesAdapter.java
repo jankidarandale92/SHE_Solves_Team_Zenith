@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder> {
+
+    //  Declaration of all the Required Variables
     private final List<Place> places;
     private final OnDirectionClickListener listener;
 

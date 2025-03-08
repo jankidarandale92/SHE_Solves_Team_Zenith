@@ -37,6 +37,7 @@ import java.util.List;
 
 public class NearbyPlaces extends FragmentActivity {
 
+    //  Declaration of all the Required Variables
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private MapView mapView;
     private RecyclerView recyclerView;

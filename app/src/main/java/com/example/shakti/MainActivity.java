@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.Manifest;
 
 public class MainActivity extends AppCompatActivity {
-
+    //  Declaration of all the Required Variables
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

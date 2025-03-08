@@ -7,6 +7,7 @@
     android:background="@color/white"
     tools:context=".SendSms">
 
+    <!--    Toolbar    -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -15,6 +16,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintTop_toTopOf="parent">
 
+        <!--    Page Title    -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -38,6 +40,7 @@
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintVertical_bias="0.0">
 
+        <!--    Message Field    -->
         <EditText
             android:id="@+id/et_message"
             android:layout_width="match_parent"
@@ -56,6 +59,7 @@
             android:gravity="end"
             android:orientation="horizontal">
 
+            <!--    Cancel Button    -->
             <Button
                 android:id="@+id/btn_cancel"
                 android:layout_width="wrap_content"
@@ -71,6 +75,7 @@
                 android:textStyle="bold"
                 android:translationZ="2dp" />
 
+            <!--    Send Button    -->
             <Button
                 android:id="@+id/btn_send"
                 android:layout_width="wrap_content"

@@ -22,6 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+    <!--    App Logo    -->
     <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
@@ -37,6 +38,7 @@
         app:layout_constraintTop_toTopOf="@+id/backgroundImage"
         app:layout_constraintVertical_bias="0.297" />
 
+    <!--    App Title    -->
     <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
@@ -65,6 +67,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo">
 
+        <!--    Signup Button    -->
         <Button
             android:id="@+id/btn_signup"
             android:layout_width="200dp"
@@ -80,6 +83,7 @@
             android:stateListAnimator="@null"
             android:layout_marginBottom="18dp"/>
 
+        <!--    Login Button    -->
         <Button
             android:id="@+id/btn_login"
             android:layout_width="200dp"
