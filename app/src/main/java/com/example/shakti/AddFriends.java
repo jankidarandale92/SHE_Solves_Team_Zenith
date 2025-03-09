@@ -12,12 +12,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -29,36 +29,37 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class AddFriends extends AppCompatActivity {
 
-    //  Declaration of all the Required Variables
     private RecyclerView recyclerView;
     private HelplineAdapter adapter;
     private List<Item> helplineList;
-    private List<Map<String, Object>> friendsList;  // Cached Firestore list
+    private List<Map<String, Object>> friendsList;
     private ImageView backButton;
     private ImageButton addFriend;
     private TextView noEntriesText;
     private FirebaseFirestore db;
     private String userId;
 
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_friends);
 
-        //  Initialization of all the Required Variables to map them with their IDS
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         backButton = findViewById(R.id.back_button);
         addFriend = findViewById(R.id.add_friend);
         noEntriesText = findViewById(R.id.no_entries_text);
+        progressBar = findViewById(R.id.progressbar);
+
         helplineList = new ArrayList<>();
         friendsList = new ArrayList<>();
         adapter = new HelplineAdapter(this, helplineList);
         recyclerView.setAdapter(adapter);
+
         db = FirebaseFirestore.getInstance();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
-        // Checking if the user is present or not
         if (currentUser != null) {
             userId = currentUser.getUid();
             loadFriendsFromFirestore();
@@ -66,14 +67,11 @@ public class AddFriends extends AppCompatActivity {
             Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
         }
 
-        //  Swipe Delete Functionality
         enableSwipeToDelete();
-
         backButton.setOnClickListener(view -> onBackPressed());
         addFriend.setOnClickListener(view -> showAddFriendDialog());
     }
 
-    //  Swipe Delete Function
     private void enableSwipeToDelete() {
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
             @Override
@@ -90,7 +88,6 @@ public class AddFriends extends AppCompatActivity {
         new ItemTouchHelper(simpleCallback).attachToRecyclerView(recyclerView);
     }
 
-    //  Deleting User from Firebase
     private void deleteFriend(int position) {
         if (position < 0 || position >= friendsList.size()) return;
 
@@ -109,8 +106,9 @@ public class AddFriends extends AppCompatActivity {
         });
     }
 
-    //  Loading Data from Firebase
     private void loadFriendsFromFirestore() {
+        progressBar.setVisibility(View.VISIBLE);
+
         db.collection("users").document(userId).get().addOnSuccessListener(documentSnapshot -> {
             if (!isDestroyed()) {
                 helplineList.clear();
@@ -129,14 +127,15 @@ public class AddFriends extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
                 updateNoEntriesText();
             }
+            progressBar.setVisibility(View.GONE);
         }).addOnFailureListener(e -> {
             if (!isDestroyed()) {
                 Toast.makeText(this, "Error loading friends: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
+            progressBar.setVisibility(View.GONE);
         });
     }
 
-    //  Add Friends Dialog added
     private void showAddFriendDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.add_friends_form, null);
@@ -166,7 +165,6 @@ public class AddFriends extends AppCompatActivity {
                 return;
             }
 
-            // Prevent duplicate entries
             for (Map<String, Object> existingFriend : friendsList) {
                 if (existingFriend.get("phone").equals(phone)) {
                     Toast.makeText(this, "This phone number is already in the list", Toast.LENGTH_SHORT).show();
@@ -179,6 +177,8 @@ public class AddFriends extends AppCompatActivity {
             newFriend.put("phone", phone);
 
             friendsList.add(newFriend);
+            progressBar.setVisibility(View.VISIBLE);
+
             db.collection("users").document(userId).update("friends", friendsList).addOnSuccessListener(aVoid -> {
                 if (!isDestroyed()) {
                     helplineList.add(new Item(name, phone));
@@ -187,16 +187,17 @@ public class AddFriends extends AppCompatActivity {
                     updateNoEntriesText();
                     Toast.makeText(this, "Friend Added", Toast.LENGTH_SHORT).show();
                 }
+                progressBar.setVisibility(View.GONE);
                 dialog.dismiss();
             }).addOnFailureListener(e -> {
                 if (!isDestroyed()) {
                     Toast.makeText(this, "Error adding friend: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
+                progressBar.setVisibility(View.GONE);
             });
         });
     }
 
-    //  Set text if no contacts present
     private void updateNoEntriesText() {
         noEntriesText.setVisibility(helplineList.isEmpty() ? View.VISIBLE : View.GONE);
     }

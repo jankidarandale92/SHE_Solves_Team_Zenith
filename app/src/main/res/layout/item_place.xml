@@ -13,6 +13,7 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:textSize="16sp"
+        android:textColor="@color/black"
         android:text="Place Name" />
 
     <!--   Directions Button    -->
@@ -20,5 +21,8 @@
         android:id="@+id/btn_direction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Directions" />
+        android:text="Directions"
+        android:backgroundTint="@color/primary"
+        android:textColor="@color/white"
+        />
 </LinearLayout>
