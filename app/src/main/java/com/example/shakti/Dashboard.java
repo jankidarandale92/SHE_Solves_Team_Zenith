@@ -10,14 +10,19 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
+import android.location.Location;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Window;
 import android.widget.TextView;
@@ -72,11 +77,16 @@ public class Dashboard extends AppCompatActivity {
     private static final int CALL_PERMISSION_REQUEST = 1;
     private static final int SMS_PERMISSION_REQUEST = 2;
     private static final int RECORD_PERMISSION_REQUEST = 3;
+    private static final int LOCATION_PERMISSION_REQUEST = 4;
 
     private MediaRecorder mediaRecorder;
     private FirebaseFirestore db;
     private File audioFile;
     TextView username;
+
+    private FusedLocationProviderClient fusedLocationClient;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,11 +119,17 @@ public class Dashboard extends AppCompatActivity {
         sos = findViewById(R.id.sos_button);
         databaseReference = FirebaseDatabase.getInstance().getReference("add_friends");
 
+        // Initialize FusedLocationProviderClient
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
         //  Fetch Username from Firebase
         fetchUsername();
 
         // Fetch contacts from Firebase
         fetchContacts();
+
+        // Setup location updates
+        setupLocationUpdates();
 
         // Click Listener for SOS Image
         sos.setOnClickListener(v -> handleSOS());
@@ -343,7 +359,6 @@ public class Dashboard extends AppCompatActivity {
         });
     }
 
-
     private void sendSMS(String phoneNumber, String message) {
         if (ContextCompat.checkSelfPermission(Dashboard.this, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
             SmsManager smsManager = SmsManager.getDefault();
@@ -356,27 +371,46 @@ public class Dashboard extends AppCompatActivity {
 
     // ------------------- Handling the Track Me Functionality -------------------
     private void sendLocationViaSMS() {
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
             return;
         }
 
-        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-            if (location != null) {
-                double latitude = location.getLatitude();
-                double longitude = location.getLongitude();
-                String locationUrl = "Track Me... My location: https://www.google.com/maps?q=" + latitude + "," + longitude;
-
-                // Send location via SMS
-                sendSMSToAllContacts(locationUrl);
-            } else {
-                Toast.makeText(this, "Failed to get location", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Request continuous location updates
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
 
+    private void setupLocationUpdates() {
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000); // Update location every 5 seconds
+        locationRequest.setFastestInterval(2000);
+
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        double latitude = location.getLatitude();
+                        double longitude = location.getLongitude();
+                        String liveLocation = "Live Location: https://www.google.com/maps?q=" + latitude + "," + longitude;
+                        sendSMSToAllContacts(liveLocation);
+                    }
+                }
+            }
+        };
+    }
+
+    private void requestLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+        } else {
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+        }
+    }
 
     // ------------------- Handling the SOS Activation -------------------
     private void handleSOS() {
@@ -396,9 +430,7 @@ public class Dashboard extends AppCompatActivity {
         startActivity(callIntent);
     }
 
-
-//    ------------------- Handling the Audio Recording -------------------
-
+    // ------------------- Handling the Audio Recording -------------------
     private void startAudioRecording() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
@@ -468,4 +500,3 @@ public class Dashboard extends AppCompatActivity {
         }
     }
 }
-
